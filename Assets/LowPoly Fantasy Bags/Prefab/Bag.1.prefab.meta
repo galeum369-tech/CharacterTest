@@ -1,14 +1,7 @@
 fileFormatVersion: 2
-guid: 0db38c38710ec1d48840e958156e8a86
+guid: 317c0b432accc06479b06878059afb10
 PrefabImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 156997
-  packageName: LowPoly Fantasy Bags
-  packageVersion: 1.0
-  assetPath: Assets/LowPoly Fantasy Bags/Prefab/Bag.1.prefab
-  uploadId: 343201
