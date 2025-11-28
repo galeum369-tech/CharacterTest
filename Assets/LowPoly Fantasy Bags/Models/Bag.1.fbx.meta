@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d8855c116b5611c488299d2e4d82c571
+guid: ef9a4b94e803bbc4d82a3ebaa0a18e76
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
@@ -93,10 +93,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 156997
-  packageName: LowPoly Fantasy Bags
-  packageVersion: 1.0
-  assetPath: Assets/LowPoly Fantasy Bags/Models/Bag.1.fbx
-  uploadId: 343201
