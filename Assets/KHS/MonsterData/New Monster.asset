@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253642078dcbc9f49b55c18ef13d53ef, type: 3}
   m_Name: New Monster
   m_EditorClassIdentifier: 
-  mobName: 
   mobID: 0
-  type: 0
+  mobName: 
   MobPrefab: {fileID: 0}
   HP: 0
   Speed: 0
   Attack: 0
   Cool: 0
+  attackRange: 0
+  detectionRange: 0
+  Class: 1
+  Type: 0
+  Pattern: 
