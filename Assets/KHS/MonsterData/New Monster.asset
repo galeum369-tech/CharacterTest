@@ -18,9 +18,16 @@ MonoBehaviour:
   HP: 0
   Speed: 0
   Attack: 0
-  Cool: 0
+  Defense: 0
+  CoolTime: 0
   attackRange: 0
   detectionRange: 0
+  minAttackRange: 0
   Class: 1
   Type: 0
-  Pattern: 
+  Race: 1
+  Pattern: 000000000000000000000000
+  jumpForce: 0
+  explosionRadius: 0
+  breathDuration: 0
+  chargeSpeed: 0

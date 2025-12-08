@@ -22,14 +22,13 @@ public enum Race
     Beholder,   //비홀더
     Mimic,      //미믹
     Dragon,     //보스/드래곤
-    Turtle      //보스/대형거북이
+    Rhino       //보스/코뿔소
 }
 
 public enum MonsterPattern
 {
     Chase,          // 추적
     Patrol,         // 순찰
-    Charge,         // 돌진
     Jump,           // 점프 공격
     RangedShot,     // 투사체 발사
     Laser,          // 레이저(비홀더)
@@ -37,7 +36,7 @@ public enum MonsterPattern
     MimicTrap,      // 기습
     AOE,            // 범위 공격
     Breath,         // 브레스(드래곤)
-    GroundShock     // 지진/충격파(거북)
+    Charge,         // 돌진(코뿔소)
 }
 
 public struct DropItem
@@ -76,11 +75,12 @@ public class MonsterData : ScriptableObject
     public MonsterPattern[] Pattern;
     [Header("패턴 파라미터")]
     [Header("각 패턴에 해당하는 파라미터만 적용")]
-    public float chargeSpeed;
-    public float jumpForce;
-    public float explosionRadius;
-    public float breathDuration;
-    public float groundShockRadius;
+    public float jumpForce;             //슬라임(일반몹인데 이거까지 필요한가 싶은 느낌 차라리 드래곤의 점프 후 범위 충격파가 더 나을듯)
+    public float explosionRadius;       //슬라임 폭발이긴한데 폭발을 넣을 필요가 있나(차라리 미믹한테 죽을때 터지는게 더 나을듯한 아님 빼든지)
+    public float breathDuration;        //드래곤
+    public float chargeSpeed;           //코뿔소
+
+
 
     [Header("몬스터 드랍 테이블")]
     public DropItem[] DropTable;
