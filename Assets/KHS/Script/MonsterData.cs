@@ -1,28 +1,26 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-
-
 
 public enum Class
 {
-    Nomal,      //일반몹
-    Boss        //보스몹
+    Normal,     // 일반몹
+    Boss        // 보스몹
 }
+
 public enum Type
 {
-    Melee,      //근접계열
-    Range       //원거리계열
+    Melee,      // 근접 공격
+    Range       // 투사체 / 레이저 등 원거리 공격
 }
 
 public enum Race
 {
-    Slime,      //슬라임
-    Golem,      //골렘
-    Drone,      //드론
-    Beholder,   //비홀더
-    Mimic,      //미믹
-    Dragon,     //보스/드래곤
-    Rhino       //보스/코뿔소
+    Slime,
+    Golem,
+    Drone,
+    Beholder,
+    Mimic,
+    Dragon,
+    Rhino
 }
 
 public enum MonsterPattern
@@ -30,59 +28,221 @@ public enum MonsterPattern
     Chase,          // 추적
     Patrol,         // 순찰
     Jump,           // 점프 공격
-    RangedShot,     // 투사체 발사
-    Laser,          // 레이저(비홀더)
-    Explode,        // 폭발
-    MimicTrap,      // 기습
-    AOE,            // 범위 공격
+    RangedShot,     // 투사체 공격
+    Laser,          // 레이저 공격(주로 드론)
+    Explode,        // 폭발 공격
+    MimicTrap,      // 함정 기습
+    AOE,            // 범위 공격(발구르기 등)
     Breath,         // 브레스(드래곤)
-    Charge,         // 돌진(코뿔소)
+    Charge          // 돌진(코뿔소)
 }
 
+[System.Serializable]
 public struct DropItem
 {
-    public int dummy;   // 나중에 제거하거나 itemID로 변경 가능
-    public float chance;   // 드랍 확률
+    public int dummy;
+    public float chance;
     public int minCount;
     public int maxCount;
 }
 
-[CreateAssetMenu(fileName = "New Monster", menuName = "Moster/Mosnter Data")]
+[CreateAssetMenu(fileName = "NewMonsterData", menuName = "Monster/Monster Data")]
 public class MonsterData : ScriptableObject
 {
-    [Header("기본정보")]
-    public int mobID; 
+    /*───────────────────────────────────────────────*
+     *  기본 정보
+     *───────────────────────────────────────────────*/
+    [Header(" 기본 정보")]
+    [Tooltip("몬스터 고유 ID (데이터 관리용)")]
+    public int mobID;
+
+    [Tooltip("몬스터 이름")]
     public string mobName;
+
+    [Tooltip("소환할 몬스터 프리팹")]
     public GameObject MobPrefab;
 
-    [Header("몬스터 스텟")]
+
+    /*───────────────────────────────────────────────*
+     *  공통 스탯
+     *───────────────────────────────────────────────*/
+    [Header(" 몬스터 기본 스탯")]
+    [Tooltip("체력")]
     public float HP;
+
+    [Tooltip("이동 속도")]
     public float Speed;
+
+    [Tooltip("공격력 (기본 공격 데미지)")]
     public float Attack;
+
+    [Tooltip("방어력 (데미지 감소량)")]
     public float Defense;
+
+    [Tooltip("공격 쿨타임")]
     public float CoolTime;
+
+    [Tooltip("근접 또는 투사체 사거리")]
     public float attackRange;
+
+    [Tooltip("플레이어를 탐지하는 거리")]
     public float detectionRange;
-    [Tooltip("원거리 몹에만 적용")]
+
+    [Tooltip("원거리 몬스터가 최소 거리를 유지할 때 사용")]
     public float minAttackRange;
 
-    [Header("몬스터 클래스/타입")]
+
+    /*───────────────────────────────────────────────*
+     *  몬스터 유형
+     *───────────────────────────────────────────────*/
+    [Header(" 몬스터 분류")]
     public Class Class;
     public Type Type;
     public Race Race;
 
-    [Header("몬스터 패턴")]
+
+    /*───────────────────────────────────────────────*
+     *  패턴 목록
+     *───────────────────────────────────────────────*/
+    [Header(" 행동 패턴 목록")]
+    [Tooltip("몬스터가 사용할 공격 패턴들 (FSM이 이 배열 기준으로 공격 선택)")]
     public MonsterPattern[] Pattern;
-    [Header("패턴 파라미터")]
-    [Header("각 패턴에 해당하는 파라미터만 적용")]
-    public float jumpForce;             //슬라임(일반몹인데 이거까지 필요한가 싶은 느낌 차라리 드래곤의 점프 후 범위 충격파가 더 나을듯)
-    public float explosionRadius;       //슬라임 폭발이긴한데 폭발을 넣을 필요가 있나(차라리 미믹한테 죽을때 터지는게 더 나을듯한 아님 빼든지)
-    public float breathDuration;        //드래곤
-    public float chargeSpeed;           //코뿔소
 
 
+    /*───────────────────────────────────────────────*
+     *  공통 패턴 파라미터
+     *───────────────────────────────────────────────*/
+    [Header("📌 패턴 공통 파라미터")]
+    [Tooltip("공격 준비 시간(바람잡기). 공격 전에 애니나 딜레이가 필요한 몹에게 사용")]
+    public float windupTime = 0.1f;
 
-    [Header("몬스터 드랍 테이블")]
+    [Tooltip("공격 후 딜레이. 공격 후 멍때리는 시간")]
+    public float recoveryTime = 0.2f;
+
+    [Tooltip("경직 저항 수치. 높을수록 히트 시에도 경직이 덜 걸림")]
+    public float poise = 0f;
+
+
+    /*───────────────────────────────────────────────*
+     *  근접 공격 전용
+     *───────────────────────────────────────────────*/
+    [Header(" 근접 공격 관련")]
+    [Tooltip("근접 공격 판정의 반경")]
+    public float attackRadius = 1f;
+
+    [Tooltip("전방 공격 범위 각도 (예: 60도)")]
+    public float attackAngle = 60f;
+
+    [Space(5)]
+    [Tooltip("AOE(발구르기 등) 범위")]
+    public float aoeRange = 2f;
+
+    [Tooltip("AOE 피해 배율 (기본 공격력 × 배율)")]
+    public float aoeDamageMultiplier = 1.5f;
+
+
+    /*───────────────────────────────────────────────*
+     *  원거리 투사체 전용 (비홀더 등)
+     *───────────────────────────────────────────────*/
+    [Header(" 투사체 몬스터 전용")]
+    [Tooltip("투사체 속도")]
+    public float projectileSpeed = 8f;
+
+    [Tooltip("투사체 생존 시간")]
+    public float projectileLifeTime = 3f;
+
+    [Tooltip("투사체 곡선 정도 (0 = 직선)")]
+    public float projectileArc = 0f;
+
+    [Tooltip("탄막 패턴용: 투사체 개수 (1 = 단일, 3 = 3-Way)")]
+    public int projectileCount = 1;
+
+    [Tooltip("예측샷을 사용할 때, 예측 보정 값")]
+    public float predictionFactor = 0.5f;
+
+    [Tooltip("연사 패턴용: 단발 사이 시간")]
+    public float shotInterval = 0.15f;
+
+    [Tooltip("연발 공격 시 총 발사 횟수")]
+    public int burstCount = 1;
+
+
+    /*───────────────────────────────────────────────*
+     *  드론(레이저) 전용
+     *───────────────────────────────────────────────*/
+    [Header(" 드론(레이저 몹) 전용")]
+    [Tooltip("드론이 이동할 수 있는 범위 (XZ 좌표 기준)")]
+    public float moveRange = 5f;
+
+    [Tooltip("랜덤 이동 간 대기 시간")]
+    public float moveInterval = 1f;
+
+    [Space(5)]
+    [Tooltip("레이저 발사 전 경고 시간")]
+    public float laserWarningTime = 0.5f;
+
+    [Tooltip("레이저 유지 시간")]
+    public float laserFireTime = 1f;
+
+    [Tooltip("레이저 쿨타임")]
+    public float laserCooldown = 2f;
+
+    [Tooltip("레이저 데미지")]
+    public float laserDamage = 20f;
+
+    [Tooltip("레이저 길이(레이캐스트 길이)")]
+    public float laserLength = 8f;
+
+    [Tooltip("레이저 발사 방향 개수 (4 = 기본 4방향, 8 = 8방향 등)")]
+    public int laserDirections = 4;
+
+
+    /*───────────────────────────────────────────────*
+     *  보스 몬스터 전용
+     *───────────────────────────────────────────────*/
+    [Header(" 보스 전용 파라미터")]
+    [Tooltip("보스 패턴 간 기본 쿨타임")]
+    public float patternCooldown = 3f;
+
+    [Tooltip("페이즈 2 전환 HP 비율 (0.5 = 50%)")]
+    public float phaseTwoHpRate = 0.5f;
+
+    [Space(5)]
+    [Tooltip("드래곤 점프 착지 AOE 범위")]
+    public float jumpAoeRadius = 3f;
+
+    [Tooltip("드래곤의 Scream 범위")]
+    public float screamRange = 10f;
+
+    [Space(5)]
+    [Tooltip("코뿔소 돌진 거리")]
+    public float chargeDistance = 10f;
+
+    [Tooltip("돌진 종료 후 멈춰있는 시간")]
+    public float chargeStoppingTime = 1f;
+
+    [Tooltip("Shout 범위")]
+    public float shoutRange = 8f;
+
+
+    /*───────────────────────────────────────────────*
+     *  FX (효과)
+     *───────────────────────────────────────────────*/
+    [Header(" FX / 연출")]
+    [Tooltip("공격 시 생성될 FX (없으면 null 허용)")]
+    public GameObject attackFX;
+
+    [Tooltip("피격 시 나타날 FX")]
+    public GameObject hitFX;
+
+    [Tooltip("죽을 때 생성될 FX")]
+    public GameObject deathFX;
+
+
+    /*───────────────────────────────────────────────*
+     *  드랍 정보
+     *───────────────────────────────────────────────*/
+    [Header(" 드랍 테이블")]
     public DropItem[] DropTable;
-
 }
+

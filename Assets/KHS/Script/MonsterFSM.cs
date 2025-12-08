@@ -4,16 +4,24 @@ using UnityEngine.AI;
 
 public class MonsterFSM : MonoBehaviour
 {
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    enum EnemyState
     {
-        
+        Idle,
+        Move,
+        Attack,
+        Damaged,
+        Die
     }
 
-    // Update is called once per frame
+    
+
+
+    void Start()
+    {
+
+    }
+
+
     void Update()
     {
         
