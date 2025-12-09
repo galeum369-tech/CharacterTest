@@ -913,6 +913,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossDragonRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 206288137534574219, guid: a24c7cbacf4537d4daa1d0750b87cf71, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3342147312817323629, guid: a24c7cbacf4537d4daa1d0750b87cf71, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
